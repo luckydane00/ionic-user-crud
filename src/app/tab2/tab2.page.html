@@ -1,17 +1,374 @@
-<ion-header [translucent]="true">
+<ion-header class="app-header">
   <ion-toolbar>
-    <ion-title>
-      Tab 2
-    </ion-title>
+    <div class="toolbar-content">
+      <div class="toolbar-mark">🔧</div>
+      <ion-title>Hardware Marketplace</ion-title>
+      <button class="refresh-button" (click)="loadProducts()">↻</button>
+    </div>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Tab 2</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content>
+  <div class="page-wrapper">
+    <!-- INTRO -->
+    <section class="intro-section">
+      <div class="intro-badge">MR.DIY-INSPIRED MARKETPLACE</div>
+      <h1>Hardware Products</h1>
+      <p>Find, manage, and explore your hardware listings.</p>
+      <div class="intro-line"></div>
+    </section>
 
-  <app-explore-container name="Tab 2 page"></app-explore-container>
+    <!-- SUMMARY -->
+    <section class="summary-grid">
+      <div class="summary-card">
+        <span class="summary-icon">📦</span>
+        <div>
+          <p>Total Products</p>
+          <h2>{{ products.length }}</h2>
+        </div>
+      </div>
+
+      <div class="summary-card">
+        <span class="summary-icon">✓</span>
+        <div>
+          <p>Available</p>
+          <h2>{{ availableCount }}</h2>
+        </div>
+      </div>
+
+      <div class="summary-card">
+        <span class="summary-icon">!</span>
+        <div>
+          <p>Out of Stock</p>
+          <h2>{{ outOfStockCount }}</h2>
+        </div>
+      </div>
+    </section>
+
+    <!-- SEARCH AND FILTER -->
+    <section class="filter-card">
+      <label class="search-label">Search products</label>
+
+      <div class="search-wrapper">
+        <span>⌕</span>
+        <input
+          type="search"
+          [(ngModel)]="searchTerm"
+          (ngModelChange)="applyFilters()"
+          placeholder="Search name, brand, or category..."
+        />
+      </div>
+
+      <label class="search-label">Category</label>
+
+      <select
+        class="filter-select"
+        [(ngModel)]="selectedCategory"
+        (ngModelChange)="applyFilters()"
+      >
+        <option value="ALL">All Categories</option>
+        <option value="Power Tools">Power Tools</option>
+        <option value="Hand Tools">Hand Tools</option>
+        <option value="Electrical Supplies">Electrical Supplies</option>
+        <option value="Plumbing Supplies">Plumbing Supplies</option>
+        <option value="Building Materials">Building Materials</option>
+        <option value="Safety Equipment">Safety Equipment</option>
+        <option value="Fasteners">Fasteners</option>
+        <option value="Hardware Accessories">Hardware Accessories</option>
+        <option value="Other">Other</option>
+      </select>
+
+      <div class="filter-actions">
+        <span>{{ filteredProducts.length }} product(s) found</span>
+
+        <button type="button" class="reset-filter" (click)="clearFilters()">
+          Clear Filters
+        </button>
+      </div>
+    </section>
+
+    <!-- PULL TO REFRESH -->
+    <ion-refresher slot="fixed" (ionRefresh)="refreshProducts($event)">
+      <ion-refresher-content
+        pullingText="Pull to refresh products"
+        refreshingSpinner="crescent"
+      ></ion-refresher-content>
+    </ion-refresher>
+
+    <!-- LOADING -->
+    <div class="loading-state" *ngIf="isLoading">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Loading hardware products...</p>
+    </div>
+
+    <!-- EMPTY STATE -->
+    <section
+      class="empty-state"
+      *ngIf="!isLoading && filteredProducts.length === 0"
+    >
+      <div class="empty-icon">🔧</div>
+      <h2>No Products Found</h2>
+
+      <p *ngIf="products.length === 0">
+        No hardware products have been posted yet. Go to Tab 1 to add your first
+        product.
+      </p>
+
+      <p *ngIf="products.length > 0">Try another search term or category.</p>
+
+      <button type="button" (click)="clearFilters()">View All Products</button>
+    </section>
+
+    <!-- PRODUCT LIST -->
+    <section
+      class="product-list"
+      *ngIf="!isLoading && filteredProducts.length > 0"
+    >
+      <div class="section-title">
+        <h2>Product Listings</h2>
+        <span>SWIPE LEFT FOR ACTIONS</span>
+      </div>
+
+      <div
+        class="product-row"
+        *ngFor="let product of filteredProducts; trackBy: trackByProductId"
+      >
+        <!-- SLIDE ACTIONS -->
+        <div class="slide-actions">
+          <button
+            type="button"
+            class="edit-action"
+            (click)="openEditModal(product)"
+          >
+            ✎
+            <span>Edit</span>
+          </button>
+
+          <button
+            type="button"
+            class="delete-action"
+            (click)="deleteProduct(product)"
+          >
+            🗑
+            <span>Delete</span>
+          </button>
+        </div>
+
+        <!-- SWIPEABLE CARD -->
+        <article
+          class="product-card"
+          [class.swiped]="swipedProductId === product.id"
+          (pointerdown)="startSwipe($event, product)"
+          (pointermove)="moveSwipe($event, product)"
+          (pointerup)="endSwipe($event, product)"
+          (pointercancel)="closeSwipe()"
+          (click)="handleCardClick(product)"
+        >
+          <div class="product-image">
+            <img
+              *ngIf="product.imageUrl; else noImage"
+              [src]="product.imageUrl"
+              [alt]="product.name"
+              loading="lazy"
+              (error)="product.imageError = true"
+              [hidden]="product.imageError"
+            />
+
+            <ng-template #noImage>
+              <div class="image-placeholder">
+                <span>🔧</span>
+                <small>NO IMAGE</small>
+              </div>
+            </ng-template>
+
+            <div
+              class="image-placeholder image-error"
+              *ngIf="product.imageUrl && product.imageError"
+            >
+              <span>🔧</span>
+              <small>NO IMAGE</small>
+            </div>
+          </div>
+
+          <div class="product-info">
+            <div class="product-topline">
+              <span class="category-tag">{{ product.category }}</span>
+
+              <span
+                class="stock-badge"
+                [class.out-of-stock]="product.stock <= 0"
+              >
+                {{ product.stock > 0 ? 'IN STOCK' : 'OUT OF STOCK' }}
+              </span>
+            </div>
+
+            <h3>{{ product.name }}</h3>
+
+            <p class="product-brand">
+              {{ product.brand }} · {{ product.condition }}
+            </p>
+
+            <p class="product-description">{{ product.description }}</p>
+
+            <div class="product-bottom">
+              <div>
+                <div class="product-price">
+                  {{ product.price | currency:'PHP':'symbol':'1.2-2' }}
+                </div>
+
+                <div class="product-stock">Stock: {{ product.stock }}</div>
+              </div>
+
+              <span class="view-hint">
+                {{ swipedProductId === product.id ? '← Actions' : '‹ ›' }}
+              </span>
+            </div>
+
+            <div class="seller-info">Seller: {{ product.sellerName }}</div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <div class="bottom-message">
+      <span class="bottom-line"></span>
+      <span>BUILD • SELL • GROW</span>
+      <span class="bottom-line"></span>
+    </div>
+  </div>
+
+  <!-- EDIT MODAL -->
+  <div
+    class="modal-backdrop"
+    *ngIf="isEditModalOpen"
+    (click)="closeEditModal()"
+  >
+    <section class="edit-modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <div>
+          <div class="intro-badge">MANAGE LISTING</div>
+          <h2>Edit Product</h2>
+        </div>
+
+        <button type="button" class="modal-close" (click)="closeEditModal()">
+          ×
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Product Name *</label>
+          <input
+            type="text"
+            [(ngModel)]="editingProduct.name"
+            placeholder="Product name"
+          />
+        </div>
+
+        <div class="form-group">
+          <label>Category *</label>
+          <select [(ngModel)]="editingProduct.category">
+            <option value="Power Tools">Power Tools</option>
+            <option value="Hand Tools">Hand Tools</option>
+            <option value="Electrical Supplies">Electrical Supplies</option>
+            <option value="Plumbing Supplies">Plumbing Supplies</option>
+            <option value="Building Materials">Building Materials</option>
+            <option value="Safety Equipment">Safety Equipment</option>
+            <option value="Fasteners">Fasteners</option>
+            <option value="Hardware Accessories">Hardware Accessories</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Brand *</label>
+          <input
+            type="text"
+            [(ngModel)]="editingProduct.brand"
+            placeholder="Brand"
+          />
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Price (PHP) *</label>
+            <input
+              type="number"
+              [(ngModel)]="editingProduct.price"
+              min="0.01"
+              step="0.01"
+            />
+          </div>
+
+          <div class="form-group">
+            <label>Stock *</label>
+            <input
+              type="number"
+              [(ngModel)]="editingProduct.stock"
+              min="0"
+              step="1"
+            />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Condition *</label>
+          <select [(ngModel)]="editingProduct.condition">
+            <option value="Brand New">Brand New</option>
+            <option value="Used">Used</option>
+            <option value="Refurbished">Refurbished</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Image URL</label>
+          <input
+            type="url"
+            [(ngModel)]="editingProduct.imageUrl"
+            placeholder="https://example.com/product.jpg"
+          />
+        </div>
+
+        <div class="form-group">
+          <label>Description *</label>
+          <textarea
+            [(ngModel)]="editingProduct.description"
+            rows="4"
+            placeholder="Product description"
+          ></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Seller Name *</label>
+          <input type="text" [(ngModel)]="editingProduct.sellerName" />
+        </div>
+
+        <div class="form-group">
+          <label>Contact Number *</label>
+          <input type="tel" [(ngModel)]="editingProduct.contactNumber" />
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button
+          type="button"
+          class="clear-button"
+          [disabled]="isSaving"
+          (click)="closeEditModal()"
+        >
+          Cancel
+        </button>
+
+        <button
+          type="button"
+          class="submit-button"
+          [disabled]="isSaving"
+          (click)="saveProduct()"
+        >
+          {{ isSaving ? 'Saving...' : 'Save Changes' }}
+        </button>
+      </div>
+    </section>
+  </div>
 </ion-content>

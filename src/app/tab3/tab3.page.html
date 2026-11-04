@@ -1,17 +1,302 @@
-<ion-header [translucent]="true">
+<ion-header class="about-header">
   <ion-toolbar>
-    <ion-title>
-      Tab 3
-    </ion-title>
+    <div class="toolbar-content">
+      <div class="toolbar-mark">H</div>
+      <ion-title>About Us</ion-title>
+    </div>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Tab 3</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <main class="about-page">
+    <!-- HERO SECTION -->
+    <section class="hero-section">
+      <div class="hero-top">
+        <span class="hero-label">ABOUT THE APPLICATION</span>
+        <div class="hero-badge">HARDWARE MARKETPLACE</div>
+      </div>
 
-  <app-explore-container name="Tab 3 page"></app-explore-container>
+      <div class="hero-main">
+        <div class="hero-text">
+          <h1>
+            Everything you need.<br />
+            <span>All in one place.</span>
+          </h1>
+
+          <p>
+            Discover, browse, and manage hardware products through a simple and
+            convenient mobile marketplace.
+          </p>
+
+          <div class="hero-button">
+            <ion-icon name="construct-outline"></ion-icon>
+            <span>YOUR HARDWARE HUB</span>
+          </div>
+        </div>
+
+        <div class="hero-symbol">
+          <ion-icon name="hammer-outline"></ion-icon>
+          <div class="symbol-lines">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-bottom">
+        <div>
+          <strong>POST</strong>
+          <span>PRODUCTS</span>
+        </div>
+        <div>
+          <strong>SEARCH</strong>
+          <span>ITEMS</span>
+        </div>
+        <div>
+          <strong>MANAGE</strong>
+          <span>LISTINGS</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section class="content-section">
+      <div class="section-heading">
+        <span class="heading-number">01</span>
+        <div>
+          <span class="heading-label">OVERVIEW</span>
+          <h2>About the App</h2>
+        </div>
+      </div>
+
+      <div class="about-text">
+        <p>
+          Hardware Marketplace is a mobile application designed to make browsing
+          and listing hardware products easier and more organized.
+        </p>
+
+        <p>
+          Users can post hardware items, explore available products, search by
+          name or category, view product information, and manage their own
+          listings in one convenient application.
+        </p>
+      </div>
+    </section>
+
+    <!-- FEATURES -->
+    <section class="content-section">
+      <div class="section-heading">
+        <span class="heading-number">02</span>
+        <div>
+          <span class="heading-label">WHAT YOU CAN DO</span>
+          <h2>Key Features</h2>
+        </div>
+      </div>
+
+      <div class="feature-list">
+        <div class="feature-row">
+          <div class="feature-number">01</div>
+          <div class="feature-icon">
+            <ion-icon name="add-circle-outline"></ion-icon>
+          </div>
+          <div class="feature-content">
+            <h3>Post Hardware Products</h3>
+            <p>
+              Add product names, categories, brands, prices, stock, conditions,
+              descriptions, and contact information.
+            </p>
+          </div>
+          <ion-icon
+            class="feature-arrow"
+            name="chevron-forward-outline"
+          ></ion-icon>
+        </div>
+
+        <div class="feature-row">
+          <div class="feature-number">02</div>
+          <div class="feature-icon">
+            <ion-icon name="search-outline"></ion-icon>
+          </div>
+          <div class="feature-content">
+            <h3>Browse and Search</h3>
+            <p>
+              Find hardware products quickly using search and category filters.
+            </p>
+          </div>
+          <ion-icon
+            class="feature-arrow"
+            name="chevron-forward-outline"
+          ></ion-icon>
+        </div>
+
+        <div class="feature-row">
+          <div class="feature-number">03</div>
+          <div class="feature-icon">
+            <ion-icon name="create-outline"></ion-icon>
+          </div>
+          <div class="feature-content">
+            <h3>Edit Product Listings</h3>
+            <p>
+              Update product details, prices, descriptions, and available stock.
+            </p>
+          </div>
+          <ion-icon
+            class="feature-arrow"
+            name="chevron-forward-outline"
+          ></ion-icon>
+        </div>
+
+        <div class="feature-row">
+          <div class="feature-number">04</div>
+          <div class="feature-icon">
+            <ion-icon name="trash-outline"></ion-icon>
+          </div>
+          <div class="feature-content">
+            <h3>Delete Products</h3>
+            <p>Remove listings that are no longer needed.</p>
+          </div>
+          <ion-icon
+            class="feature-arrow"
+            name="chevron-forward-outline"
+          ></ion-icon>
+        </div>
+
+        <div class="feature-row">
+          <div class="feature-number">05</div>
+          <div class="feature-icon">
+            <ion-icon name="cube-outline"></ion-icon>
+          </div>
+          <div class="feature-content">
+            <h3>Track Product Stock</h3>
+            <p>
+              Display stock quantities and identify products that are out of
+              stock.
+            </p>
+          </div>
+          <ion-icon
+            class="feature-arrow"
+            name="chevron-forward-outline"
+          ></ion-icon>
+        </div>
+
+        <div class="feature-row">
+          <div class="feature-number">06</div>
+          <div class="feature-icon">
+            <ion-icon name="cloud-outline"></ion-icon>
+          </div>
+          <div class="feature-content">
+            <h3>Cloud Database</h3>
+            <p>
+              Store and retrieve hardware product listings using Firebase
+              Firestore.
+            </p>
+          </div>
+          <ion-icon
+            class="feature-arrow"
+            name="chevron-forward-outline"
+          ></ion-icon>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRODUCT INFORMATION -->
+    <section class="content-section">
+      <div class="section-heading">
+        <span class="heading-number">03</span>
+        <div>
+          <span class="heading-label">DATA STRUCTURE</span>
+          <h2>Product Information</h2>
+        </div>
+      </div>
+
+      <div class="data-list">
+        <div class="data-row">
+          <div class="data-key">PRODUCT NAME</div>
+          <div class="data-description">Name of the hardware item</div>
+        </div>
+
+        <div class="data-row">
+          <div class="data-key">CATEGORY</div>
+          <div class="data-description">Type of hardware product</div>
+        </div>
+
+        <div class="data-row">
+          <div class="data-key">BRAND</div>
+          <div class="data-description">Manufacturer or product brand</div>
+        </div>
+
+        <div class="data-row">
+          <div class="data-key">PRICE</div>
+          <div class="data-description">Selling price of the product</div>
+        </div>
+
+        <div class="data-row">
+          <div class="data-key">STOCK</div>
+          <div class="data-description">Available product quantity</div>
+        </div>
+
+        <div class="data-row">
+          <div class="data-key">CONDITION</div>
+          <div class="data-description">Brand new, used, or refurbished</div>
+        </div>
+
+        <div class="data-row">
+          <div class="data-key">DESCRIPTION</div>
+          <div class="data-description">Additional product details</div>
+        </div>
+
+        <div class="data-row">
+          <div class="data-key">SELLER</div>
+          <div class="data-description">Seller name and contact number</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TECHNOLOGY -->
+    <section class="technology-section">
+      <div class="section-heading">
+        <span class="heading-number">04</span>
+        <div>
+          <span class="heading-label">DEVELOPMENT</span>
+          <h2>Built With</h2>
+        </div>
+      </div>
+
+      <div class="technology-list">
+        <span>Ionic</span>
+        <span>Angular</span>
+        <span>TypeScript</span>
+        <span>Firebase</span>
+        <span>Firestore</span>
+        <span>SCSS</span>
+      </div>
+    </section>
+
+    <!-- DEVELOPER FOOTER -->
+    <footer class="about-footer">
+      <div class="footer-line"></div>
+
+      <div class="footer-content">
+        <div class="footer-brand">
+          <div class="footer-mark">H</div>
+          <div>
+            <h3>Hardware Marketplace</h3>
+            <p>Ionic · Angular · Firebase</p>
+          </div>
+        </div>
+
+        <div class="student-info">
+          <span>ACTIVITY BY</span>
+          <strong>Mark Daniel Balbuena</strong>
+          <small>BSIT IV-F2</small>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <span>CRUD ACTIVITY</span>
+        <span>© HARDWARE MARKETPLACE</span>
+      </div>
+    </footer>
+  </main>
 </ion-content>

@@ -1,17 +1,227 @@
-<ion-header [translucent]="true">
+<ion-header class="app-header">
   <ion-toolbar>
-    <ion-title>
-      Tab 1
-    </ion-title>
+    <div class="toolbar-content">
+      <div class="toolbar-mark">🔧</div>
+      <ion-title>Post Hardware Product</ion-title>
+    </div>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Tab 1</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content>
+  <div class="page-wrapper">
+    <!-- INTRO -->
+    <section class="intro-section">
+      <div class="intro-badge">HARDWARE MARKETPLACE</div>
+      <h1>Post a Product</h1>
+      <p>
+        List your hardware products and make them available to potential buyers.
+      </p>
+      <div class="intro-line"></div>
+    </section>
 
-  <app-explore-container name="Tab 1 page"></app-explore-container>
+    <!-- PRODUCT FORM -->
+    <section class="form-card">
+      <!-- PRODUCT DETAILS HEADING -->
+      <div class="form-heading">
+        <div class="heading-number">01</div>
+        <div>
+          <h2>Product Details</h2>
+          <p>Provide accurate information about your product.</p>
+        </div>
+      </div>
+
+      <!-- PRODUCT NAME -->
+      <div class="form-group">
+        <label>Product Name <span>*</span></label>
+        <div class="input-wrapper">
+          <div class="field-icon">🔩</div>
+          <input
+            type="text"
+            [(ngModel)]="newProduct.name"
+            placeholder="e.g. Cordless Electric Drill"
+          />
+        </div>
+      </div>
+
+      <!-- CATEGORY -->
+      <div class="form-group">
+        <label>Category <span>*</span></label>
+        <div class="input-wrapper">
+          <div class="field-icon">#</div>
+          <select [(ngModel)]="newProduct.category">
+            <option value="" disabled>Select a category</option>
+            <option value="Power Tools">Power Tools</option>
+            <option value="Hand Tools">Hand Tools</option>
+            <option value="Electrical Supplies">Electrical Supplies</option>
+            <option value="Plumbing Supplies">Plumbing Supplies</option>
+            <option value="Building Materials">Building Materials</option>
+            <option value="Safety Equipment">Safety Equipment</option>
+            <option value="Fasteners">Fasteners</option>
+            <option value="Hardware Accessories">Hardware Accessories</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- BRAND -->
+      <div class="form-group">
+        <label>Brand <span>*</span></label>
+        <div class="input-wrapper">
+          <div class="field-icon">🏷️</div>
+          <input
+            type="text"
+            [(ngModel)]="newProduct.brand"
+            placeholder="e.g. Bosch, DeWalt, Makita"
+          />
+        </div>
+      </div>
+
+      <!-- PRICE -->
+      <div class="form-group">
+        <label>Price (PHP) <span>*</span></label>
+        <div class="input-wrapper">
+          <div class="field-icon">₱</div>
+          <input
+            type="number"
+            [(ngModel)]="newProduct.price"
+            placeholder="Enter product price"
+            min="0.01"
+            step="0.01"
+          />
+        </div>
+      </div>
+
+      <!-- AVAILABLE STOCK -->
+      <div class="form-group">
+        <label>Available Stock <span>*</span></label>
+        <div class="input-wrapper">
+          <div class="field-icon">📦</div>
+          <input
+            type="number"
+            [(ngModel)]="newProduct.stock"
+            placeholder="Enter available quantity"
+            min="1"
+            step="1"
+          />
+        </div>
+      </div>
+
+      <!-- CONDITION -->
+      <div class="form-group">
+        <label>Product Condition <span>*</span></label>
+        <div class="status-options">
+          <button
+            type="button"
+            class="status-option"
+            [class.selected]="newProduct.condition === 'Brand New'"
+            (click)="newProduct.condition = 'Brand New'"
+          >
+            <span class="status-dot"></span>
+            Brand New
+          </button>
+
+          <button
+            type="button"
+            class="status-option"
+            [class.selected]="newProduct.condition === 'Used'"
+            (click)="newProduct.condition = 'Used'"
+          >
+            <span class="status-dot"></span>
+            Used
+          </button>
+
+          <button
+            type="button"
+            class="status-option"
+            [class.selected]="newProduct.condition === 'Refurbished'"
+            (click)="newProduct.condition = 'Refurbished'"
+          >
+            <span class="status-dot"></span>
+            Refurbished
+          </button>
+        </div>
+      </div>
+
+      <!-- DESCRIPTION -->
+      <div class="form-group">
+        <label>Product Description <span>*</span></label>
+        <textarea
+          [(ngModel)]="newProduct.description"
+          placeholder="Describe the product, specifications, size, material, and other important details..."
+          rows="5"
+        ></textarea>
+      </div>
+
+      <!-- SELLER INFORMATION -->
+      <div class="form-divider"></div>
+
+      <div class="form-heading">
+        <div class="heading-number">02</div>
+        <div>
+          <h2>Seller Information</h2>
+          <p>Tell buyers how they can contact you.</p>
+        </div>
+      </div>
+
+      <!-- SELLER NAME -->
+      <div class="form-group">
+        <label>Seller Name <span>*</span></label>
+        <div class="input-wrapper">
+          <div class="field-icon">👤</div>
+          <input
+            type="text"
+            [(ngModel)]="newProduct.sellerName"
+            placeholder="Enter seller or store name"
+          />
+        </div>
+      </div>
+
+      <!-- CONTACT NUMBER -->
+      <div class="form-group">
+        <label>Contact Number <span>*</span></label>
+        <div class="input-wrapper">
+          <div class="field-icon">📞</div>
+          <input
+            type="tel"
+            [(ngModel)]="newProduct.contactNumber"
+            placeholder="e.g. 09XXXXXXXXX"
+          />
+        </div>
+      </div>
+
+      <!-- FORM ACTIONS -->
+      <div class="form-divider"></div>
+
+      <div class="form-actions">
+        <button
+          type="button"
+          class="clear-button"
+          [disabled]="isLoading"
+          (click)="resetForm()"
+        >
+          <span>↻</span>
+          Clear Form
+        </button>
+
+        <button
+          type="button"
+          class="submit-button"
+          [disabled]="isLoading"
+          (click)="postProduct()"
+        >
+          <span>+</span>
+          {{ isLoading ? 'Posting...' : 'Post Product' }}
+        </button>
+      </div>
+
+      <p class="required-note"><span>*</span> Required fields</p>
+    </section>
+
+    <!-- BOTTOM MESSAGE -->
+    <div class="bottom-message">
+      <span class="bottom-line"></span>
+      <span>BUILD • SELL • GROW</span>
+      <span class="bottom-line"></span>
+    </div>
+  </div>
 </ion-content>
