@@ -1,0 +1,87 @@
+name: Ionic CRUD CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  # CONTINUOUS INTEGRATION
+  continuous-integration:
+    name: Continuous Integration
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22.x"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run automated tests
+        run: npm test -- --watch=false
+
+      - name: Build Ionic Angular application
+        run: npm run build
+
+  # CONTINUOUS DEPLOYMENT
+  continuous-deployment:
+    name: Continuous Deployment
+    needs: continuous-integration
+    if: github.event_name == 'push'
+    runs-on: [self-hosted, Windows, X64]
+
+    steps:
+      - name: Checkout latest code
+        uses: actions/checkout@v4
+
+      - name: Check Docker
+        run: docker info
+
+      - name: Build Ionic Docker image
+        run: docker build -t ionic-crud:latest .
+
+      - name: Remove previous container
+        run: docker rm -f ionic-crud
+        continue-on-error: true
+
+      - name: Start updated container
+        run: docker run -d --name ionic-crud --restart unless-stopped -p 8100:8100 ionic-crud:latest
+
+      - name: Verify application
+        shell: powershell
+        run: |
+          $success = $false
+
+          for ($i = 1; $i -le 30; $i++) {
+              try {
+                  $response = Invoke-WebRequest -Uri "http://localhost:8100/" -UseBasicParsing -TimeoutSec 5
+
+                  if ($response.StatusCode -ge 200 -and $response.StatusCode -lt 400) {
+                      $success = $true
+                      break
+                  }
+              }
+              catch {
+                  Start-Sleep -Seconds 2
+              }
+          }
+
+          if (-not $success) {
+              docker logs ionic-crud
+              exit 1
+          }
+
+          Write-Host "Ionic CRUD application deployed successfully!"
